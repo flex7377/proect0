@@ -1,0 +1,13 @@
+Some basic Git commands are:
+```
+                   R41 e0/0 = BRSERV BRDS
+                  .e0/2
+                    =
+                  .e0/2
+      Inet = e0/0  R40  e0/3 = CLI
+                  .e0/1
+                    =
+                  .e0/1
+                   R39 e0/0 = e0/0 R42 = HQCLI
+                                       = HQSWRV
+```
