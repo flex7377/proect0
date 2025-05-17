@@ -1,0 +1,131 @@
+✅ HQ-SRV — Сервер в HQ----------------------------------------------------------------
+# Задание имени хоста
+nano /etc/hostname
+# Вставить:
+HQ-SRV
+
+# Настройка сети
+nano /etc/network/interfaces
+# Вставить:
+auto ens192
+iface ens192 inet static
+  address 192.168.11.1/26
+  gateway 192.168.11.61
+
+# Применить настройки сети
+systemctl restart networking.service
+
+# DNS-сервер
+nano /etc/resolv.conf
+nameserver 8.8.8.8
+
+# Перезагрузка и обновления
+reboot
+apt update
+apt upgrade
+
+# Установка часового пояса
+dpkg-reconfigure tzdata
+# Выбрать:
+Asia → Yekaterinburg
+
+✅ HQ-CLI — Клиент HQ (с DHCP)----------------------------------------------------------------
+nano /etc/hostname
+# Вставить:
+HQ-CLI
+
+nano /etc/network/interfaces
+auto ens192
+iface ens192 inet dhcp
+
+systemctl restart networking.service
+
+nano /etc/resolv.conf
+nameserver 8.8.8.8
+
+sudo reboot
+apt update
+apt upgrade
+
+# Вручную или через GUI: настройки даты/времени → часовой пояс: +05 Yekaterinburg
+
+✅ BR-SRV — Сервер в филиале----------------------------------------------------------------
+nano /etc/hostname
+# Вставить:
+BR-SRV
+
+nano /etc/network/interfaces
+auto ens192
+iface ens192 inet static
+  address 192.168.21.1/27
+  gateway 192.168.21.30
+
+systemctl restart networking.service
+
+nano /etc/resolv.conf
+nameserver 8.8.8.8
+
+reboot
+apt update
+apt upgrade
+
+dpkg-reconfigure tzdata
+# Выбрать:
+Asia → Yekaterinburg
+
+✅ CLI — Клиент вне DMZ (на 172.16.6.0/28)----------------------------------------------------------------
+nano /etc/hostname
+# Вставить:
+CLI
+
+nano /etc/network/interfaces
+auto ens192
+iface ens192 inet static
+  address 172.16.6.1/28
+  gateway 172.16.6.14
+
+systemctl restart networking.service
+
+nano /etc/resolv.conf
+nameserver 8.8.8.8
+
+reboot
+apt update
+apt upgrade
+
+# Вручную или через GUI: часовой пояс +05 Yek
+
+👤 Создание пользователя sshuser на HQ-SRV и BR-SRV----------------------------------------------------------------
+useradd -m -u 1010 -s /bin/bash sshuser
+passwd sshuser
+# Ввести дважды: toor
+
+apt install sudo
+
+visudo
+# Добавить строку в конец файла:
+sshuser ALL=(ALL) NOPASSWD:ALL
+
+# Проверка:
+su - sshuser
+sudo apt update
+
+🔐 Установка и настройка SSH на HQ-SRV и BR-SRV----------------------------------------------------------------
+apt install openssh-server
+
+nano /etc/ssh/sshd_config
+# Изменить / добавить:
+Port 2024
+AllowUsers sshuser
+Banner /etc/issue.net
+
+nano /etc/issue.net
+# Вставить:
+Authorized access only
+
+# Перезапуск SSH-сервиса
+systemctl restart sshd
+
+🔎 Проверка доступа SSH-------------------------------------------------------------------------------------
+ssh -p 2024 sshuser@192.168.11.1    # HQ-SRV
+ssh -p 2024 sshuser@192.168.21.1    # BR-SRV
