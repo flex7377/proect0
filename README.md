@@ -100,6 +100,7 @@ exit
 clock timezone +05 5 0
 
 ntp server 192.168.12.2
+ip domain name au-team.irpo
 
 ```
 
@@ -154,6 +155,9 @@ router ospf 1
  passive-interface default
  no passive-interface Tunnel0
 clock timezone +05 5 0
+
+ntp server 192.168.12.2
+ip domain name au-team.irpo
 
 ```
 
