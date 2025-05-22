@@ -99,6 +99,8 @@ ip dhcp pool HQ-CLI-POOL
 exit
 clock timezone +05 5 0
 
+ntp server 192.168.12.2
+
 ```
 
 ##🖧 Устройство: (R41)
